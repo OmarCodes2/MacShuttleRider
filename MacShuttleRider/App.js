@@ -3,14 +3,14 @@ import { StyleSheet, Text, View, StatusBar } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
 const LOCKED_REGION = {
-  latitude: 37.78825,
-  longitude: -122.4324,
-  latitudeDelta: 0.0922,
-  longitudeDelta: 0.0421,
+  latitude: 43.26252182610375,
+  longitude: -79.92393298074603,
+  latitudeDelta: 0.021165080277782522,
+  longitudeDelta: 0.01742396503686905,
 };
 
-const MIN_LATITUDE_DELTA = 0.002;
-const MAX_LATITUDE_DELTA = 0.1;
+const MIN_LATITUDE_DELTA = 0.0005;
+const MAX_LATITUDE_DELTA = 0.021165080277782522;
 
 const calculateLongitudeDelta = (latitudeDelta) => latitudeDelta * (LOCKED_REGION.longitudeDelta / LOCKED_REGION.latitudeDelta);
 
@@ -62,7 +62,7 @@ export default function App() {
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <View style={styles.header}>
-        <Text style={styles.headerText}>MAC SHUTTLE</Text>
+        <Text style={styles.headerText}>Mac Shuttle</Text>
       </View>
       <MapView
         provider={PROVIDER_GOOGLE}
