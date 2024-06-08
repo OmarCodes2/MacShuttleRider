@@ -1,8 +1,63 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, StatusBar } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
+const LOCKED_REGION = {
+  latitude: 37.78825,
+  longitude: -122.4324,
+  latitudeDelta: 0.0922,
+  longitudeDelta: 0.0421,
+};
+
+const MIN_LATITUDE_DELTA = 0.002;
+const MAX_LATITUDE_DELTA = 0.1;
+
+const calculateLongitudeDelta = (latitudeDelta) => latitudeDelta * (LOCKED_REGION.longitudeDelta / LOCKED_REGION.latitudeDelta);
+
 export default function App() {
+  const [region, setRegion] = useState(LOCKED_REGION);
+
+  const handleRegionChangeComplete = (newRegion) => {
+    let latitude = newRegion.latitude;
+    let longitude = newRegion.longitude;
+    let latitudeDelta = newRegion.latitudeDelta;
+    let longitudeDelta = newRegion.longitudeDelta;
+
+    // Ensure the zoom level is within the set bounds
+    if (latitudeDelta < MIN_LATITUDE_DELTA) {
+      latitudeDelta = MIN_LATITUDE_DELTA;
+    } else if (latitudeDelta > MAX_LATITUDE_DELTA) {
+      latitudeDelta = MAX_LATITUDE_DELTA;
+    }
+
+    longitudeDelta = calculateLongitudeDelta(latitudeDelta);
+
+    // Ensure the map stays within the locked region
+    const maxLatitude = LOCKED_REGION.latitude + (LOCKED_REGION.latitudeDelta / 2);
+    const minLatitude = LOCKED_REGION.latitude - (LOCKED_REGION.latitudeDelta / 2);
+    const maxLongitude = LOCKED_REGION.longitude + (LOCKED_REGION.longitudeDelta / 2);
+    const minLongitude = LOCKED_REGION.longitude - (LOCKED_REGION.longitudeDelta / 2);
+
+    if (latitude < minLatitude) {
+      latitude = minLatitude;
+    } else if (latitude > maxLatitude) {
+      latitude = maxLatitude;
+    }
+
+    if (longitude < minLongitude) {
+      longitude = minLongitude;
+    } else if (longitude > maxLongitude) {
+      longitude = maxLongitude;
+    }
+
+    setRegion({
+      latitude,
+      longitude,
+      latitudeDelta,
+      longitudeDelta,
+    });
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -12,12 +67,8 @@ export default function App() {
       <MapView
         provider={PROVIDER_GOOGLE}
         style={styles.map}
-        initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
+        region={region}
+        onRegionChangeComplete={handleRegionChangeComplete}
       />
       <View style={styles.footer}>
         <Text style={styles.footerText}>© McMaster University 2024</Text>
