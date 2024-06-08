@@ -7,7 +7,7 @@ export default function App() {
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <View style={styles.header}>
-        <Text style={styles.headerText}>mac shuttle</Text>
+        <Text style={styles.headerText}>MAC SHUTTLE</Text>
       </View>
       <MapView
         provider={PROVIDER_GOOGLE}
@@ -20,7 +20,7 @@ export default function App() {
         }}
       />
       <View style={styles.footer}>
-        <Text style={styles.footerText}>Footer Text</Text>
+        <Text style={styles.footerText}>© McMaster University 2024</Text>
       </View>
     </View>
   );
@@ -33,8 +33,8 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: 'rgb(122, 0, 60)',
-    paddingTop: 40,
-    paddingBottom: 10,
+    paddingTop: 20,
+    paddingBottom: 20,
     alignItems: 'center',
     justifyContent: 'center',
   },
