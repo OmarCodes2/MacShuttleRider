@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, StatusBar } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
+import stop1Image from './assets/stop1.png';
+import stop2Image from './assets/stop2.png';
+import busImage from './assets/bus.png';
 
 const LOCKED_REGION = {
   latitude: 43.26252182610375,
@@ -93,17 +96,17 @@ export default function App() {
         region={region}
         onRegionChangeComplete={handleRegionChangeComplete}
       >
-        <Marker coordinate={{ latitude: 43.2601414, longitude: -79.9219256 }}>
+        <Marker coordinate={{ latitude: 43.2601414, longitude: -79.9219256 }} image={stop1Image}>
           <Callout>
             <Text>{etas.stop1}</Text>
           </Callout>
         </Marker>
-        <Marker coordinate={{ latitude: 43.2632088, longitude: -79.9166429 }}>
+        <Marker coordinate={{ latitude: 43.2632088, longitude: -79.9166429 }} image={stop2Image}>
           <Callout>
             <Text>{etas.stop2}</Text>
           </Callout>
         </Marker>
-        <Marker coordinate={{ latitude: busPosition.latitude, longitude: busPosition.longitude }}>
+        <Marker coordinate={{ latitude: busPosition.latitude, longitude: busPosition.longitude }} image={busImage}>
           <Callout>
             <Text>Bus Position</Text>
           </Callout>
