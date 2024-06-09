@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, StatusBar } from 'react-native';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 
 const LOCKED_REGION = {
   latitude: 43.26252182610375,
@@ -16,6 +16,29 @@ const calculateLongitudeDelta = (latitudeDelta) => latitudeDelta * (LOCKED_REGIO
 
 export default function App() {
   const [region, setRegion] = useState(LOCKED_REGION);
+  const [etas, setEtas] = useState({ stop1: "Loading...", stop2: "Loading..." });
+  const [busPosition, setBusPosition] = useState({ latitude: 43.262670, longitude: -79.916121 });
+
+  useEffect(() => {
+    const ws = new WebSocket(process.env.EXPO_PUBLIC_WEBSOCKET_ENDPOINT);
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      setEtas(data.etas);
+      setBusPosition(data.busPosition);
+    };
+
+    ws.onerror = (error) => {
+      console.log("WebSocket Error: ", error);
+    };
+
+    ws.onclose = () => {
+      console.log("WebSocket connection closed");
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, []);
 
   const handleRegionChangeComplete = (newRegion) => {
     let latitude = newRegion.latitude;
@@ -69,7 +92,23 @@ export default function App() {
         style={styles.map}
         region={region}
         onRegionChangeComplete={handleRegionChangeComplete}
-      />
+      >
+        <Marker coordinate={{ latitude: 43.2601414, longitude: -79.9219256 }}>
+          <Callout>
+            <Text>{etas.stop1}</Text>
+          </Callout>
+        </Marker>
+        <Marker coordinate={{ latitude: 43.2632088, longitude: -79.9166429 }}>
+          <Callout>
+            <Text>{etas.stop2}</Text>
+          </Callout>
+        </Marker>
+        <Marker coordinate={{ latitude: busPosition.latitude, longitude: busPosition.longitude }}>
+          <Callout>
+            <Text>Bus Position</Text>
+          </Callout>
+        </Marker>
+      </MapView>
       <View style={styles.footer}>
         <Text style={styles.footerText}>© McMaster University 2024</Text>
       </View>
