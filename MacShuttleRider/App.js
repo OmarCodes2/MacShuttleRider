@@ -8,11 +8,11 @@ import busImage from './assets/bus.png';
 const LOCKED_REGION = {
   latitude: 43.26252182610375,
   longitude: -79.92393298074603,
-  latitudeDelta: 0.021165080277782522,
+  latitudeDelta: 0.071165080277782522,
   longitudeDelta: 0.01742396503686905,
 };
 
-const MIN_LATITUDE_DELTA = 0.0005;
+const MIN_LATITUDE_DELTA = 0.0001;
 const MAX_LATITUDE_DELTA = 0.021165080277782522;
 
 const calculateLongitudeDelta = (latitudeDelta) => latitudeDelta * (LOCKED_REGION.longitudeDelta / LOCKED_REGION.latitudeDelta);
@@ -23,7 +23,7 @@ export default function App() {
   const [busPosition, setBusPosition] = useState({ latitude: 43.262670, longitude: -79.916121 });
 
   useEffect(() => {
-    const ws = new WebSocket(process.env.EXPO_PUBLIC_WEBSOCKET_ENDPOINT);
+    const ws = new WebSocket("ws://macshuttle-env.eba-thck352g.us-east-1.elasticbeanstalk.com/ws");
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
       setEtas(data.etas);
